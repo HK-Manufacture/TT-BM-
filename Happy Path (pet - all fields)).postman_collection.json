@@ -1,0 +1,593 @@
+{
+  "info": {
+    "_postman_id": "97f1b02e-e80f-49a4-aed8-5f820f52448d",
+    "name": "Happy Path (pet - all fields))",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "21975459",
+    "_collection_link": "https://go.postman.co/collection/21975459-97f1b02e-e80f-49a4-aed8-5f820f52448d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Pet",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const petId = Math.floor(Math.random() * 9007199254740991);",
+              "const categoryId = Math.floor(Math.random() * 9007199254740991);",
+              "const tagId = Math.floor(Math.random() * 9007199254740991);",
+              "",
+              "const petName = pm.variables.replaceIn('{{$randomFirstName}}');",
+              "const categoryName = pm.variables.replaceIn('{{$randomWord}}');",
+              "const tagName = pm.variables.replaceIn('{{$randomWord}}');",
+              "const petImage = pm.variables.replaceIn('{{$randomImageUrl}}');",
+              "",
+              "const statuses = ['available', 'pending', 'sold'];",
+              "const status = _.sample(statuses);",
+              "",
+              "pm.collectionVariables.set('petId', petId);",
+              "pm.collectionVariables.set('categoryId', categoryId);",
+              "pm.collectionVariables.set('tagId', tagId);",
+              "pm.collectionVariables.set('petName', petName);",
+              "pm.collectionVariables.set('categoryName', categoryName);",
+              "pm.collectionVariables.set('tagName', tagName);",
+              "pm.collectionVariables.set('petImage', petImage);",
+              "pm.collectionVariables.set('status', status);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "const petSchema = JSON.parse(pm.collectionVariables.get('petSchema'));",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Response matches Pet JSON schema\", () => {",
+              "    pm.response.to.have.jsonSchema(petSchema);",
+              "});",
+              "",
+              "pm.test('Pet ID matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedId = parseInt(pm.collectionVariables.get('petId'));",
+              "    ",
+              "    console.log('Expected ID:', expectedId);",
+              "    console.log('Response ID:', jsonData.id);",
+              "    ",
+              "    pm.expect(jsonData.id).to.eql(expectedId);",
+              "});",
+              "",
+              "pm.test('Pet name matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedName = pm.collectionVariables.get('petName');",
+              "    ",
+              "    console.log('Expected name:', expectedName);",
+              "    console.log('Response name:', jsonData.name);",
+              "    ",
+              "    pm.expect(jsonData.name).to.eql(expectedName);",
+              "});",
+              "",
+              "pm.test('Pet status matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedStatus = pm.collectionVariables.get('status');",
+              "    ",
+              "    console.log('Expected status:', expectedStatus);",
+              "    console.log('Response status:', jsonData.status);",
+              "    ",
+              "    pm.expect(jsonData.status).to.eql(expectedStatus);",
+              "});",
+              "",
+              "pm.test('Category ID matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedCategoryId = parseInt(pm.collectionVariables.get('categoryId'));",
+              "    ",
+              "    console.log('Expected category ID:', expectedCategoryId);",
+              "    console.log('Response category ID:', jsonData.category.id);",
+              "    ",
+              "    pm.expect(jsonData.category.id).to.eql(expectedCategoryId);",
+              "});",
+              "",
+              "pm.test('Category name matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedCategoryName = pm.collectionVariables.get('categoryName');",
+              "    ",
+              "    console.log('Expected category name:', expectedCategoryName);",
+              "    console.log('Response category name:', jsonData.category.name);",
+              "    ",
+              "    pm.expect(jsonData.category.name).to.eql(expectedCategoryName);",
+              "});",
+              "",
+              "pm.test('PhotoUrls match request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedPetImage = pm.collectionVariables.get('petImage');",
+              "    ",
+              "    console.log('Expected Photo Url:', expectedPetImage);",
+              "    console.log('Response Photo Url:', jsonData.photoUrls[0]);",
+              "    ",
+              "    pm.expect(jsonData.photoUrls[0]).to.eql(expectedPetImage);",
+              "});",
+              "",
+              "pm.test('Tag ID matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedTagId = parseInt(pm.collectionVariables.get('tagId'));",
+              "    ",
+              "    console.log('Expected tag ID:', expectedTagId);",
+              "    console.log('Response tag ID:', jsonData.tags[0].id);",
+              "    ",
+              "    pm.expect(jsonData.tags[0].id).to.eql(expectedTagId);",
+              "});",
+              "",
+              "pm.test('Tag name matches request', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedTagName = pm.collectionVariables.get('tagName');",
+              "    ",
+              "    console.log('Expected tag name:', expectedTagName);",
+              "    console.log('Response tag name:', jsonData.tags[0].name);",
+              "    ",
+              "    pm.expect(jsonData.tags[0].name).to.eql(expectedTagName);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": {{petId}},\n    \"category\": {\n        \"id\": {{categoryId}},\n        \"name\": \"{{categoryName}}\"\n    },\n    \"name\": \"{{petName}}\",\n    \"photoUrls\": [\n        \"{{petImage}}\"\n    ],\n    \"tags\": [\n        {\n            \"id\": {{tagId}},\n            \"name\": \"{{tagName}}\"\n        }\n    ],\n    \"status\": \"{{status}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v2/pet",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v2",
+            "pet"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Pet by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "const petSchema = JSON.parse(pm.collectionVariables.get('petSchema'));",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Response matches Pet JSON schema\", function () {",
+              "    pm.response.to.have.jsonSchema(petSchema);",
+              "});",
+              "",
+              "pm.test(\"Got the same pet by id\", function () {",
+              "    const pet = pm.response.json();",
+              "",
+              "    const expectedId = pm.collectionVariables.get(\"petId\");",
+              "    const expectedName = pm.collectionVariables.get(\"petName\");",
+              "",
+              "    pm.expect(pet.id).to.eql(Number(expectedId));  ",
+              "    pm.expect(pet.name).to.eql(expectedName);",
+              "});",
+              "",
+              "// Store original data for comparison after update",
+              "pm.collectionVariables.set('originalPetData', JSON.stringify(pm.response.json()));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v2/pet/{{petId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v2",
+            "pet",
+            "{{petId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Pet (status)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const currentStatus = pm.collectionVariables.get('status');",
+              "",
+              "const allStatuses = ['available', 'pending', 'sold'];",
+              "",
+              "const availableStatuses = allStatuses.filter(s => s !== currentStatus);",
+              "",
+              "const newStatus = availableStatuses[Math.floor(Math.random() * availableStatuses.length)];",
+              "",
+              "console.log('Current status:', currentStatus);",
+              "console.log('New status:', newStatus);",
+              "",
+              "pm.collectionVariables.set('newStatus', newStatus);",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "pm.test('Pet status was changed', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedNewStatus = pm.collectionVariables.get('newStatus');",
+              "    ",
+              "    console.log('Expected new status:', expectedNewStatus);",
+              "    console.log('Response new status:', jsonData.status);",
+              "    ",
+              "    pm.expect(jsonData.status).to.eql(expectedNewStatus);",
+              "});",
+              "",
+              "pm.test('All fields except status remain unchanged', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const originalData = JSON.parse(pm.collectionVariables.get('originalPetData'));",
+              "    ",
+              "    console.log('Original data:', originalData);",
+              "    console.log('Updated data:', jsonData);",
+              "    ",
+              "    pm.expect(jsonData.id).to.eql(originalData.id);",
+              "    pm.expect(jsonData.name).to.eql(originalData.name);",
+              "    pm.expect(jsonData.category.id).to.eql(originalData.category.id);",
+              "    pm.expect(jsonData.category.name).to.eql(originalData.category.name);",
+              "    pm.expect(jsonData.photoUrls[0]).to.eql(originalData.photoUrls[0]);",
+              "    pm.expect(jsonData.tags[0].id).to.eql(originalData.tags[0].id);",
+              "    pm.expect(jsonData.tags[0].name).to.eql(originalData.tags[0].name);",
+              "",
+              "});",
+              "",
+              "const petSchema = JSON.parse(pm.collectionVariables.get('petSchema'));",
+              "const jsonData = pm.response.json();",
+              "",
+              "pm.test(\"Response matches Pet JSON schema\", () => {",
+              "    pm.response.to.have.jsonSchema(petSchema);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": {{petId}},\n    \"category\": {\n        \"id\": {{categoryId}},\n        \"name\": \"{{categoryName}}\"\n    },\n    \"name\": \"{{petName}}\",\n    \"photoUrls\": [\n        \"{{petImage}}\"\n    ],\n    \"tags\": [\n        {\n            \"id\": {{tagId}},\n            \"name\": \"{{tagName}}\"\n        }\n    ],\n    \"status\": \"{{newStatus}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/v2/pet",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v2",
+            "pet"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Updated Pet by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "pm.test('Get updated Pet status', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedNewStatus = pm.collectionVariables.get('newStatus');",
+              "    ",
+              "    console.log('Expected new status:', expectedNewStatus);",
+              "    console.log('Response new status:', jsonData.status);",
+              "    ",
+              "    pm.expect(jsonData.status).to.eql(expectedNewStatus);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v2/pet/{{petId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v2",
+            "pet",
+            "{{petId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find Pets by Updated Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response time is less than 1000ms', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+              "});",
+              "",
+              "pm.test(\"Response body is an array\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(Array.isArray(jsonData)).to.be.true;",
+              "});",
+              "",
+              "pm.test('Updated pet is present in the list', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const petId = parseInt(pm.collectionVariables.get('petId'));",
+              "    const foundPet = jsonData.find(pet => pet.id === petId);",
+              "    pm.expect(foundPet).to.exist;",
+              "});",
+              "",
+              "pm.test('All pets have correct status', function () {",
+              "    const jsonData = pm.response.json();",
+              "    const expectedStatus = pm.collectionVariables.get('newStatus');",
+              "    ",
+              "    jsonData.forEach(pet => {",
+              "        pm.expect(pet.status).to.eql(expectedStatus);",
+              "    });",
+              "});",
+              "",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/v2/pet/findByStatus?status={{newStatus}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "v2",
+            "pet",
+            "findByStatus"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "{{newStatus}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "value",
+        "value": "{{apiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "key",
+        "value": "apiKey",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          "pm.collectionVariables.set('baseUrl', 'https://petstore.swagger.io');",
+          "pm.collectionVariables.set('apiKey', 'special-key');",
+          "",
+          "const petSchema = {",
+          "    type: \"object\",",
+          "    required: [\"id\", \"category\", \"name\", \"photoUrls\", \"tags\", \"status\"],",
+          "    additionalProperties: false,",
+          "    properties: {",
+          "        id: {},",
+          "        category: {",
+          "            type: \"object\",",
+          "            required: [\"id\", \"name\"],",
+          "            properties: {",
+          "                id: {},",
+          "                name: { type: \"string\" }",
+          "            }",
+          "        },",
+          "        name: { type: \"string\" },",
+          "        photoUrls: {",
+          "            type: \"array\",",
+          "            items: { type: \"string\" }",
+          "        },",
+          "        tags: {",
+          "            type: \"array\",",
+          "            items: {",
+          "                type: \"object\",",
+          "                required: [\"id\", \"name\"],",
+          "                properties: {",
+          "                    id: {},",
+          "                    name: { type: \"string\" }",
+          "                }",
+          "            }",
+          "        },",
+          "        status: {",
+          "            type: \"string\",",
+          "            enum: [\"available\", \"pending\", \"sold\"]",
+          "        }",
+          "    }",
+          "};",
+          "",
+          "pm.collectionVariables.set('petSchema', JSON.stringify(petSchema));"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "petId",
+      "value": ""
+    },
+    {
+      "key": "petName",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "categoryName",
+      "value": ""
+    },
+    {
+      "key": "originalPetData",
+      "value": ""
+    },
+    {
+      "key": "newStatus",
+      "value": ""
+    },
+    {
+      "key": "tagId",
+      "value": ""
+    },
+    {
+      "key": "status",
+      "value": ""
+    },
+    {
+      "key": "petSchema",
+      "value": ""
+    },
+    {
+      "key": "tagName",
+      "value": ""
+    },
+    {
+      "key": "petImage",
+      "value": ""
+    },
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
